@@ -46,7 +46,6 @@ public class Soundex
             'M' or 'N' => '5',
             'R' => '6',
             => '0'
-            };
-        }
+        };
     }
 }
