@@ -10,23 +10,28 @@ public class Soundex
             return string.Empty;
         }
         StringBuilder soundex = new StringBuilder();
-        soundex.Append(name[0].ToString().ToUpper());
-        AppendSoundex(name, soundex);
+        soundex.Append(char.ToUpper(name[0]));
+        ProcessCharSoundex(name, soundex);
         return soundex.ToString().padRight(4, '0').SubString(0,4);
     }
 
-    private static void AppendSoundex(string name, StringBuilder soundex)
+    private static void ProcessCharSoundex(string name, StringBuilder soundex)
     {
         char prevCode = GetSoundexCode(name[0]);
-     for (int i = 1; i < name.Length; i++)
+        for (int i = 1; i < name.Length; i++)
         {
             char code = GetSoundexCode(name[i]);
-            if (code != '0' && code != prevCode && soundex.Length < 4)
+            if (AppendSoundex(code, prevCode, soundex.Length))
             {
                 soundex.Append(code);
                 prevCode = code;
             }
         }
+    }
+
+    private static bool AppendSoundex(char code, char prevCode, int soundexLength)
+    {
+        return code != '0' && code != prevCode && soundexLength < 4;
     }
 
     private static char GetSoundexCode(char c)
