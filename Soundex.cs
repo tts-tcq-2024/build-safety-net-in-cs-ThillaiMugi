@@ -9,21 +9,24 @@ public class Soundex
         {
             return string.Empty;
         }
-
         StringBuilder soundex = new StringBuilder();
-        soundex.Append(char.ToUpper(name[0]));
-        char prevCode = GetSoundexCode(name[0]);
+        soundex.Append(name[0].ToString().ToUpper());
+        AppendSoundex(name, soundex);
+        return soundex.ToString().padRight(4, '0').SubString(0,4);
+    }
 
-     for (int i = 1; i < nameChars.Length; i++)
+    private static void AppendSoundex(string name, StringBuilder soundex)
+    {
+        char prevCode = GetSoundexCode(name[0]);
+     for (int i = 1; i < name.Length; i++)
         {
-            char code = GetSoundexCode(nameChars[i]);
+            char code = GetSoundexCode(name[i]);
             if (code != '0' && code != prevCode && soundex.Length < 4)
             {
                 soundex.Append(code);
                 prevCode = code;
             }
         }
-        return soundex.ToString().padRight(4, '0').SubString(0,4);
     }
 
     private static char GetSoundexCode(char c)
