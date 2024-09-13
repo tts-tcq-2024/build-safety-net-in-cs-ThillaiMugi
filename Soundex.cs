@@ -23,13 +23,7 @@ public class Soundex
                 prevCode = code;
             }
         }
-
-        while (soundex.Length < 4)
-        {
-            soundex.Append('0');
-        }
-
-        return soundex.ToString();
+        return soundex.Append('0', 4 - soundx.Length).ToString();
     }
 
     private static char GetSoundexCode(char c)
