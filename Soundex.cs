@@ -14,19 +14,16 @@ public class Soundex
         soundex.Append(char.ToUpper(name[0]));
         char prevCode = GetSoundexCode(name[0]);
 
-        for (int i = 1; i < nameChars.Length; i++)
+     for (int i = 1; i < nameChars.Length; i++)
         {
-            char currentChar = nameChars[i];
-            char code = GetSoundexCode(c);
-            if (code != '0' && code != prevCode)
+            char code = GetSoundexCode(nameChars[i]);
+            if (code != '0' && code != prevCode && soundex.Length < 4)
             {
                 soundex.Append(code);
                 prevCode = code;
             }
-            if (soundex.Length == 4)
-                break;
         }
-        return soundex.Append('0', 4 - soundx.Length).ToString();
+        return soundex.ToString().padRight(4, '0').SubString(0,4);
     }
 
     private static char GetSoundexCode(char c)
