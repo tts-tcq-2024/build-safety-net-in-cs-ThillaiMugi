@@ -34,18 +34,18 @@ public class Soundex
         return code != '0' && code != prevCode && soundexLength < 4;
     }
 
-    private static char GetSoundexCode(char c)
+private static char GetSoundexCode(char c)
     {
         c = char.ToUpper(c);
-        return switch (c)
+        return c switch
         {
-            'B' or 'F' or 'p' or 'V' => '1',
+            'B' or 'F' or 'P' or 'V' => '1',
             'C' or 'G' or 'J' or 'K' or 'Q' or 'S' or 'X' or 'Z' => '2',
             'D' or 'T' => '3',
             'L' => '4',
             'M' or 'N' => '5',
             'R' => '6',
-            => '0'
+            _ => '0'
         };
     }
 }
