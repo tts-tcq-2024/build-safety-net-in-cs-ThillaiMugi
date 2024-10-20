@@ -5,64 +5,60 @@ public class Soundex
 {
     public static string GenerateSoundex(string name)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             return string.Empty;
         }
-
-        StringBuilder soundex = new StringBuilder();
+        
+        var soundex = new StringBuilder();
         soundex.Append(char.ToUpper(name[0]));
-        char prevCode = GetSoundexCode(name[0]);
-
-        for (int i = 1; i < name.Length && soundex.Length < 4; i++)
+        
+        // Only call ProcessSoundex if there's more than one character
+        if (name.Length > 1)
         {
-            char code = GetSoundexCode(name[i]);
-            if (code != '0' && code != prevCode)
+            ProcessSoundex(name.Substring(1), soundex);
+        }
+        
+        return FormatSoundex(soundex.ToString());
+    }
+
+    private static void ProcessSoundex(string name, StringBuilder soundex)
+    {
+        char previousCode = GetSoundexCode(name[0]);
+
+        for (int i = 1; i < name.Length; i++)
+        {
+            char currentCode = GetSoundexCode(name[i]);
+            if (CanAppendSoundex(currentCode, previousCode, soundex.Length))
             {
-                soundex.Append(code);
-                prevCode = code;
+                soundex.Append(currentCode);
+                previousCode = currentCode;
             }
         }
+    }
 
-        while (soundex.Length < 4)
-        {
-            soundex.Append('0');
-        }
-
-        return soundex.ToString();
+    private static bool CanAppendSoundex(char currentCode, char previousCode, int soundexLength)
+    {
+        return currentCode != '0' && currentCode != previousCode && soundexLength < 4;
     }
 
     private static char GetSoundexCode(char c)
     {
         c = char.ToUpper(c);
-        switch (c)
+        return c switch
         {
-            case 'B':
-            case 'F':
-            case 'P':
-            case 'V':
-                return '1';
-            case 'C':
-            case 'G':
-            case 'J':
-            case 'K':
-            case 'Q':
-            case 'S':
-            case 'X':
-            case 'Z':
-                return '2';
-            case 'D':
-            case 'T':
-                return '3';
-            case 'L':
-                return '4';
-            case 'M':
-            case 'N':
-                return '5';
-            case 'R':
-                return '6';
-            default:
-                return '0'; // For A, E, I, O, U, H, W, Y
-        }
+            'B' or 'F' or 'P' or 'V' => '1',
+            'C' or 'G' or 'J' or 'K' or 'Q' or 'S' or 'X' or 'Z' => '2',
+            'D' or 'T' => '3',
+            'L' => '4',
+            'M' or 'N' => '5',
+            'R' => '6',
+            _ => '0'
+        };
+    }
+
+    private static string FormatSoundex(string soundex)
+    {
+        return soundex.PadRight(4, '0').Substring(0, 4);
     }
 }
