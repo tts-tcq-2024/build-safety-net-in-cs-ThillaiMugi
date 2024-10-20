@@ -12,7 +12,12 @@ public class Soundex
         
         var soundex = new StringBuilder();
         soundex.Append(char.ToUpper(name[0]));
-        ProcessSoundex(name.Substring(1), soundex);
+        
+        // Only call ProcessSoundex if there's more than one character
+        if (name.Length > 1)
+        {
+            ProcessSoundex(name.Substring(1), soundex);
+        }
         
         return FormatSoundex(soundex.ToString());
     }
