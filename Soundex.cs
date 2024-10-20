@@ -5,36 +5,39 @@ public class Soundex
 {
     public static string GenerateSoundex(string name)
     {
-        if (string.IsNullOrEmpty(name))
+        if (string.IsNullOrWhiteSpace(name))
         {
             return string.Empty;
         }
-        StringBuilder soundex = new StringBuilder();
+        
+        var soundex = new StringBuilder();
         soundex.Append(char.ToUpper(name[0]));
-        ProcessCharSoundex(name, soundex);
-        return soundex.ToString().padRight(4, '0').SubString(0,4);
+        ProcessSoundex(name.Substring(1), soundex);
+        
+        return FormatSoundex(soundex.ToString());
     }
 
-    private static void ProcessCharSoundex(string name, StringBuilder soundex)
+    private static void ProcessSoundex(string name, StringBuilder soundex)
     {
-        char prevCode = GetSoundexCode(name[0]);
+        char previousCode = GetSoundexCode(name[0]);
+
         for (int i = 1; i < name.Length; i++)
         {
-            char code = GetSoundexCode(name[i]);
-            if (AppendSoundex(code, prevCode, soundex.Length))
+            char currentCode = GetSoundexCode(name[i]);
+            if (CanAppendSoundex(currentCode, previousCode, soundex.Length))
             {
-                soundex.Append(code);
-                prevCode = code;
+                soundex.Append(currentCode);
+                previousCode = currentCode;
             }
         }
     }
 
-    private static bool AppendSoundex(char code, char prevCode, int soundexLength)
+    private static bool CanAppendSoundex(char currentCode, char previousCode, int soundexLength)
     {
-        return code != '0' && code != prevCode && soundexLength < 4;
+        return currentCode != '0' && currentCode != previousCode && soundexLength < 4;
     }
 
-private static char GetSoundexCode(char c)
+    private static char GetSoundexCode(char c)
     {
         c = char.ToUpper(c);
         return c switch
@@ -47,5 +50,10 @@ private static char GetSoundexCode(char c)
             'R' => '6',
             _ => '0'
         };
+    }
+
+    private static string FormatSoundex(string soundex)
+    {
+        return soundex.PadRight(4, '0').Substring(0, 4);
     }
 }
